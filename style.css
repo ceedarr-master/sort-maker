@@ -379,7 +379,7 @@ input[type="text"]:focus {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 120px;
   transition: all .15s;
   overflow: hidden;
@@ -398,9 +398,14 @@ input[type="text"]:focus {
   object-fit: cover;
   border-radius: 10px 10px 0 0;
   display: block;
+  flex-shrink: 0;
 }
 
 .choice-label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.97rem;
   font-weight: 600;
   padding: 0.7rem 0.8rem;
