@@ -644,13 +644,22 @@ function cancelEditing() {
   if (cancelBtn) cancelBtn.style.display = 'none';
 }
 
-function deleteSortFromList(id) {
+async function deleteSortFromList(id) {
   if (!confirm('정말로 이 소트를 삭제하시겠습니까? 삭제된 데이터는 복구할 수 없습니다.')) return;
-  
+
   let sorts = getMySorts();
+  const target = sorts.find(x => x.id === id);
   sorts = sorts.filter(x => x.id !== id);
   saveMySorts(sorts);
-  
+
+  if (target && target.fbId) {
+    try {
+      await window.deleteDoc(window.doc(window.db, "sorts", target.fbId));
+    } catch (error) {
+      console.error("공유 링크 삭제 실패:", error);
+    }
+  }
+
   showToast('소트가 삭제되었습니다');
   renderMySorts();
 }

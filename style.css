@@ -393,7 +393,8 @@ input[type="text"]:focus {
 
 .choice-img {
   width: 100%;
-  height: 110px;
+  aspect-ratio: 1 / 1;
+  height: auto;
   object-fit: cover;
   border-radius: 10px 10px 0 0;
   display: block;
@@ -652,10 +653,6 @@ input[type="text"]:focus {
 
   h1 {
     font-size: 1.3rem;
-  }
-
-  .choice-img {
-    height: 85px;
   }
 
   /* 비교 화면이 모바일 한 화면에 들어오도록 여백/크기 축소 (스크롤 방지) */
