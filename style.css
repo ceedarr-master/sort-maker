@@ -646,7 +646,7 @@ input[type="text"]:focus {
   }
 
   #play-sorting .choice-btn {
-    min-height: 0;
+    /*min-height: 0;*/
   }
 
   #play-sorting .choice-btn.text-only .choice-label {
