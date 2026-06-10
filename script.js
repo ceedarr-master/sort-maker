@@ -534,6 +534,7 @@ function updatePlayProgress() {
   
   document.getElementById('play-progress-pct').textContent = pct + '%';
   document.getElementById('play-progress-fill').style.width = pct + '%';
+  document.getElementById('play-battle-count').textContent = (playComparesDone + 1) + '번째 배틀';
 }
 
 function showPlayResult() {

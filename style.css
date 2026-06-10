@@ -4,10 +4,14 @@
   padding: 0;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
-  font-family: 'Sunflower', sans-serif; 
-  background: #ffffff; 
-  color: #111; 
+  font-family: 'Sunflower', sans-serif;
+  background: #ffffff;
+  color: #111;
   min-height: 100vh;
 
 }
@@ -622,5 +626,55 @@ input[type="text"]:focus {
 
   .choice-img {
     height: 85px;
+  }
+
+  /* 비교 화면이 모바일 한 화면에 딱 맞도록 구성 (스크롤 방지) */
+  #play-app {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - 2.4rem);
+  }
+
+  #play-sorting.screen.active {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  #play-sorting.screen.active .card {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  #play-sorting .sort-title-label {
+    margin-bottom: 0.8rem;
+  }
+
+  #play-sorting .progress-wrap {
+    margin-bottom: 0.8rem;
+  }
+
+  #play-sorting .compare-grid {
+    flex: 1;
+    min-height: 0;
+    margin-bottom: 0.8rem;
+  }
+
+  #play-sorting .choice-btn {
+    min-height: 0;
+    height: 100%;
+  }
+
+  #play-sorting .choice-img {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+  }
+
+  #play-sorting .choice-btn.text-only .choice-label {
+    padding: 0.8rem;
   }
 }
