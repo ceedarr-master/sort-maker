@@ -628,25 +628,9 @@ input[type="text"]:focus {
     height: 85px;
   }
 
-  /* 비교 화면이 모바일 한 화면에 딱 맞도록 구성 (스크롤 방지) */
-  #play-app {
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100dvh - 2.4rem);
-  }
-
-  #play-sorting.screen.active {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-  }
-
-  #play-sorting.screen.active .card {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
+  /* 비교 화면이 모바일 한 화면에 들어오도록 여백/크기 축소 (스크롤 방지) */
+  #play-sorting .card {
+    padding: 1rem;
   }
 
   #play-sorting .sort-title-label {
@@ -658,19 +642,10 @@ input[type="text"]:focus {
   }
 
   #play-sorting .compare-grid {
-    flex: 1;
-    min-height: 0;
     margin-bottom: 0.8rem;
   }
 
   #play-sorting .choice-btn {
-    min-height: 0;
-    height: 100%;
-  }
-
-  #play-sorting .choice-img {
-    flex: 1;
-    height: auto;
     min-height: 0;
   }
 
