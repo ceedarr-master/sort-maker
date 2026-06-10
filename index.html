@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소트 메이커</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+  
+  // 👇 아래 firebaseConfig 안의 내용을 본인이 발급받은 정보로 덮어쓰세요!
+  const firebaseConfig = {
+    apiKey: "AIzaSyDkall-bNnLG1ayjhcUi8u2cfboE7bStNo",
+    authDomain: "sortmaker-77f68.firebaseapp.com",
+    projectId: "sortmaker-77f68",
+    storageBucket: "sortmaker-77f68.firebasestorage.app",
+    messagingSenderId: "39049825741",
+    appId: "1:39049825741:web:9cf07c3622c763d3b08884",
+    measurementId: "G-KNYJZL2MBJ"
+  };
+
+  // 파이어베이스 도구들을 script.js 파일에서 쓸 수 있도록 창구(window)에 연결해줍니다.
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  window.db = getFirestore(app);
+  window.collection = collection;
+  window.addDoc = addDoc;
+  window.getDoc = getDoc;
+  window.doc = doc;
+</script>
+
+</head>
+<body>
+<div class="container">
+
+  <!-- 메인 앱 -->
+  <div id="main-app" class="screen active">
+    <h1>소트 메이커</h1>
+    <p class="subtitle">순위를 만들어요</p>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('make',this)">소트 만들기</button>
+      <button class="tab" onclick="switchTab('my',this)">내 소트 목록</button>
+    </div>
+
+    <!-- 만들기 탭 -->
+    <div id="tab-make">
+      <div class="card">
+        <div class="form-group">
+          <label>소트 제목</label>
+          <input type="text" id="make-title" placeholder="예: 최애 야식 순위" maxlength="50">
+        </div>
+        <div class="form-group">
+          <label>소트할 목록</label>
+          <div class="items-list" id="items-list"></div>
+          <button class="add-item-btn" onclick="addItem()">+ 항목 추가</button>
+          <p class="hint">이미지 아이콘을 눌러서 이미지 URL을 입력할 수 있어요</p>
+        </div>
+        <button class="btn btn-primary" onclick="saveSortAndPlay()">✅ 저장하고 공유 링크 받기</button>
+        <button class="btn btn-secondary" id="cancel-edit-btn" style="width: 100%; justify-content: center; margin-top: 0.5rem; display: none;" onclick="cancelEditing()">❌ 수정 취소 (새로 만들기)</button>
+      </div>
+    </div>
+
+    <!-- 내 목록 탭 -->
+    <div id="tab-my" style="display:none">
+      <div id="my-sort-list"></div>
+    </div>
+  </div>
+
+  <!-- 플레이 앱 -->
+  <div id="play-app" class="screen">
+    <!-- 시작 화면 -->
+    <div id="play-setup" class="screen active">
+      <div class="card">
+        <div class="play-header">
+          <h2 id="play-sort-title"></h2>
+          <p id="play-sort-meta"></p>
+        </div>
+        <button class="btn btn-primary" onclick="startPlay()">소트 시작하기</button>
+      </div>
+      <div class="share-box">
+        <p>📎소트 링크</p>
+        <div class="share-url-row">
+          <div class="share-url" id="play-share-url"></div>
+          <button class="btn btn-secondary btn-sm" onclick="copyShareUrl('play-share-url')">복사</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 비교 화면 -->
+    <div id="play-sorting" class="screen">
+      <div class="card">
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span id="play-progress-pct">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="play-progress-fill" style="width:0%"></div></div>
+        </div>
+        <div class="sort-title-label" id="play-title-label"></div>
+        <div class="compare-grid">
+          <button class="choice-btn" id="play-btn-left" onclick="playChoose('left')"></button>
+          <div class="vs-text">VS</div>
+          <button class="choice-btn" id="play-btn-right" onclick="playChoose('right')"></button>
+        </div>
+        <div class="sub-btns">
+          <button class="sub-btn" onclick="playChoose('both')">둘 다 좋아</button>
+          <button class="sub-btn" onclick="playChoose('neither')">모르겠어</button>
+          <button class="sub-btn" onclick="playUndo()">↩ 되돌리기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 결과 화면 -->
+    <div id="play-result" class="screen">
+      <div class="card">
+        <div style="text-align:center;margin-bottom:1.2rem">
+          <div style="font-size:1.1rem;font-weight:700" id="play-result-title"></div>
+          <div style="font-size:0.82rem;color:#999;margin-top:3px" id="play-result-meta"></div>
+        </div>
+        <div class="result-list" id="play-result-list"></div>
+        <button class="btn btn-secondary" style="width:100%; margin-bottom: 0.7rem;" onclick="startPlay()">↩ 다시 하기</button>
+        <button class="btn btn-primary" style="width:100%" onclick="goToMakeScreen()">➕ 내 소트 만들기</button>
+      </div>
+      <div class="share-box">
+        <p>📎 이 소트 공유하기</p>
+        <div class="share-url-row">
+          <div class="share-url" id="result-share-url"></div>
+          <button class="btn btn-secondary btn-sm" onclick="copyShareUrl('result-share-url')">복사</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 이미지 URL 입력 모달 -->
+<div class="img-modal-bg" id="img-modal">
+  <div class="img-modal">
+    <h3>🖼 이미지 URL 입력</h3>
+    <input type="text" id="img-url-input" placeholder="https://example.com/image.jpg" oninput="previewImg()">
+    <img id="img-preview" class="img-preview" alt="미리보기">
+    <p style="font-size:0.8rem;color:#999;margin-bottom:0.8rem">이미지 주소를 붙여넣기하세요</p>
+    <div class="img-modal-btns">
+      <button class="btn btn-primary" style="flex:1" onclick="applyImg()">적용</button>
+      <button class="btn btn-secondary" onclick="removeImg()">이미지 없애기</button>
+      <button class="btn btn-secondary btn-sm" onclick="closeImgModal()">취소</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
