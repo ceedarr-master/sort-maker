@@ -13,7 +13,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
   
   // 👇 아래 firebaseConfig 안의 내용을 본인이 발급받은 정보로 덮어쓰세요!
@@ -35,6 +35,7 @@
   window.addDoc = addDoc;
   window.getDoc = getDoc;
   window.doc = doc;
+  window.setDoc = setDoc;
 </script>
 
 </head>

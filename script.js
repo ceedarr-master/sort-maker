@@ -168,17 +168,35 @@ try {
     setTimeout(() => reject(new Error('서버 응답 지연')), 5000)
   );
 
-  const dbTask = window.addDoc(window.collection(window.db, "sorts"), {
-    title: sortObj.title,
-    items: sortObj.items,
-    createdAt: Date.now()
-  });
+  let docId = sortObj.fbId;
+  let dbTask;
+  if (docId) {
+    // 기존 문서가 있으면 같은 ID에 덮어써서 링크가 유지되도록 함
+    dbTask = window.setDoc(window.doc(window.db, "sorts", docId), {
+      title: sortObj.title,
+      items: sortObj.items,
+      createdAt: Date.now()
+    });
+  } else {
+    dbTask = window.addDoc(window.collection(window.db, "sorts"), {
+      title: sortObj.title,
+      items: sortObj.items,
+      createdAt: Date.now()
+    });
+  }
 
   // Promise.race: 5초 안에 DB 저장이 안 되면 강제로 에러 처리(catch)로 넘김
-  const docRef = await Promise.race([dbTask, timeout]);
-  
+  const result = await Promise.race([dbTask, timeout]);
+  if (!docId) docId = result.id;
+
+  // 새로 생성된 문서 ID를 내 소트 목록에도 저장해두어 다음 수정 시 재사용
+  if (sortObj.fbId !== docId) {
+    sortObj.fbId = docId;
+    saveMySorts(sorts);
+  }
+
   // 성공 시 짧은 URL 생성
-  shareUrl = location.origin + location.pathname + '#id=' + docRef.id;
+  shareUrl = location.origin + location.pathname + '#id=' + docId;
 } catch (error) {
   console.error("서버 연결 실패: ", error);
   showToast('서버 연결 실패. 기존 긴 링크로 플레이합니다.');
@@ -257,14 +275,19 @@ function renderMySorts() {
 function shareSortById(id) {
   const s = getMySorts().find(x=>x.id===id);
   if (!s) return;
-  const url = makeShareUrl({ title: s.title, items: s.items });
+  const url = s.fbId
+    ? location.origin + location.pathname + '#id=' + s.fbId
+    : makeShareUrl({ title: s.title, items: s.items });
   navigator.clipboard.writeText(url).then(()=>showToast('링크 복사됐어요! 친구에게 공유하세요 🎉'));
 }
 
 function playFromList(id) {
   const s = getMySorts().find(x=>x.id===id);
   if (!s) return;
-  loadPlayScreen(s, makeShareUrl({ title: s.title, items: s.items }));
+  const url = s.fbId
+    ? location.origin + location.pathname + '#id=' + s.fbId
+    : makeShareUrl({ title: s.title, items: s.items });
+  loadPlayScreen(s, url);
 }
 
 // ── 플레이 화면 로드 ──
