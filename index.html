@@ -48,7 +48,7 @@
     <h1>소트 메이커</h1>
     <p class="subtitle">소트를 만들어봅시다</p>
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('make',this)">소트 만들기</button>
+      <button class="tab active" onclick="switchTab('make',this)">소트 만들기/메인</button>
       <button class="tab" onclick="switchTab('my',this)">내 소트 목록</button>
     </div>
 
@@ -66,7 +66,7 @@
           <p class="hint">이미지 아이콘을 눌러서 이미지 URL을 입력할 수 있어요</p>
         </div>
         <button class="btn btn-primary" onclick="saveSortAndPlay()">✅ 저장하고 공유 링크 받기</button>
-        <button class="btn btn-secondary" id="cancel-edit-btn" style="width: 100%; justify-content: center; margin-top: 0.5rem; display: none;" onclick="cancelEditing()">❌ 수정 취소 (새로 만들기)</button>
+        <button class="btn btn-secondary" id="cancel-edit-btn" style="width: 100%; justify-content: center; margin-top: 0.5rem; display: none;" onclick="cancelEditing()">❌ 수정 취소 (메인)</button>
       </div>
     </div>
 
@@ -93,7 +93,7 @@
           <div class="share-url" id="play-share-url"></div>
           <button class="btn btn-secondary btn-sm" onclick="copyShareUrl('play-share-url')">복사</button>
         </div>
-        <button class="btn btn-secondary" style="width:100%; justify-content:center; margin-top:0.7rem" onclick="goToMakeScreen()">➕ 내 소트 만들기</button>
+        <button class="btn btn-secondary" style="width:100%; justify-content:center; margin-top:0.7rem" onclick="goToMakeScreen()">➕ 내 소트 만들기/메인</button>
       </div>
     </div>
 
@@ -130,7 +130,7 @@
         </div>
         <div class="result-list" id="play-result-list"></div>
         <button class="btn btn-secondary" style="width:100%; margin-bottom: 0.7rem;" onclick="startPlay()">↩ 다시 하기</button>
-        <button class="btn btn-primary" style="width:100%" onclick="goToMakeScreen()">➕ 내 소트 만들기</button>
+        <button class="btn btn-primary" style="width:100%" onclick="goToMakeScreen()">➕ 내 소트 만들기/메인</button>
       </div>
       <div class="share-box">
         <p>📎 이 소트 공유하기</p>
