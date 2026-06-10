@@ -150,6 +150,16 @@
     <input type="text" id="img-url-input" placeholder="https://example.com/image.jpg" oninput="previewImg()">
     <img id="img-preview" class="img-preview" alt="미리보기">
     <p style="font-size:0.8rem;color:#999;margin-bottom:0.8rem">이미지 주소를 붙여넣기하세요</p>
+    <details class="img-help">
+      <summary>이미지 링크 얻는 법</summary>
+      <div class="img-help-body">
+        <p><strong>💻 컴퓨터</strong></p>
+        <p>1. 이미지를 마우스 오른쪽 버튼으로 클릭합니다.<br>2. 메뉴에서 '이미지 링크(주소) 복사'를 누릅니다.</p>
+        <p><strong>📱 스마트폰</strong></p>
+        <p>1. 원하는 이미지를 손가락으로 길게 누릅니다.<br>2. 메뉴가 뜨면 '이미지 공유(복사)' 또는 'Image URL 복사' 항목을 누릅니다.</p>
+        <p>✅ 이미지 링크가 올바르게 복사됐다면 위에 미리보기가 떠요.</p>
+      </div>
+    </details>
     <div class="img-modal-btns">
       <button class="btn btn-primary" style="flex:1" onclick="applyImg()">적용</button>
       <button class="btn btn-secondary" onclick="removeImg()">이미지 없애기</button>
